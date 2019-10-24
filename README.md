@@ -1,6 +1,4 @@
-# the-complete-nodejs-developer-course-third-edition
-
-## Udemy - The Complete Node.js Developer Course (3rd Edition)
+# Udemy - The Complete Node.js Developer Course (3rd Edition)
 
 ### Used libraries in this project
 

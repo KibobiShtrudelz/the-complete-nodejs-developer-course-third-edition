@@ -1,0 +1,13 @@
+{
+  "name": "weather-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Petar Kolev",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.0"
+  }
+}

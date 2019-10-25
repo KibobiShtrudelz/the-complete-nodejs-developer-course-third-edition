@@ -6,3 +6,4 @@
 - chalk - https://www.npmjs.com/package/chalk
 - nodemon - https://www.npmjs.com/package/nodemon
 - yargs - https://www.npmjs.com/package/yargs
+- request - https://www.npmjs.com/package/request

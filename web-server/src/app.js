@@ -48,6 +48,22 @@ app.get("/weather", (req, res) => {
   });
 });
 
+app.get("/help/*", (req, res) => {
+  res.render("404", {
+    title: "Help",
+    name: "Peci Kolec",
+    errorMessage: "Help article not found!"
+  });
+});
+
+app.get("*", (req, res) => {
+  res.render("404", {
+    title: "Error 404",
+    name: "Peci Kolec",
+    errorMessage: "Page Not Found!"
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is up on port ${PORT}`);
 });

@@ -2,6 +2,9 @@ const path = require("path");
 const express = require("express");
 const hbs = require("hbs");
 
+const geocode = require("./utils/geocode");
+const forecast = require("./utils/forecast");
+
 const app = express();
 
 const PORT = 3000;
@@ -42,10 +45,46 @@ app.get("/help", (req, res) => {
 });
 
 app.get("/weather", (req, res) => {
-  res.send({
-    forecast: "It's 500 graduses",
-    location: "Hell"
+  const address = req.query.address;
+
+  if (!address) {
+    return res.send({
+      errorMessage: "You must provide an address!"
+    });
+  }
+
+  geocode(address, (err, { latitude, longitude, location }) => {
+    if (err) {
+      return res.send({
+        errorMessage: "Something went wrong! Please try again later."
+      });
+    }
+
+    forecast(latitude, longitude, (error, forecastData) => {
+      if (err) {
+        return res.send({
+          errorMessage: "Something went wrong! Please try again later."
+        });
+      }
+
+      res.send({
+        location,
+        forecast: forecastData,
+        address
+      });
+    });
   });
+});
+
+app.get("/products", (req, res) => {
+  if (!req.query.search) {
+    return res.send({
+      errorMessage: "You must provide a search term!"
+    });
+  }
+
+  console.log("req", req.query.search);
+  res.send({ products: [] });
 });
 
 app.get("/help/*", (req, res) => {

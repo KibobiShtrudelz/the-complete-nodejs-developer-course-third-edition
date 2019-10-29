@@ -1,13 +1,11 @@
 const path = require("path");
 const express = require("express");
 const hbs = require("hbs");
-
 const geocode = require("./utils/geocode");
 const forecast = require("./utils/forecast");
 
 const app = express();
 
-const PORT = 3000;
 // Define paths for Express config
 const publicDirectoryPath = path.join(__dirname, "../public");
 const viewsPath = path.join(__dirname, "../templates/views");
@@ -21,7 +19,7 @@ hbs.registerPartials(partialsPath);
 // Setup static directory to serve
 app.use(express.static(publicDirectoryPath));
 
-app.get("/", (req, res) => {
+app.get("", (req, res) => {
   res.render("index", {
     title: "Weather",
     name: "Petar Kolev"
@@ -30,79 +28,77 @@ app.get("/", (req, res) => {
 
 app.get("/about", (req, res) => {
   res.render("about", {
-    title: "About Weather App",
-    name: "Petar Kolev",
-    description: "NodeJS Weather App"
+    title: "About Me",
+    name: "Petar Kolev"
   });
 });
 
 app.get("/help", (req, res) => {
   res.render("help", {
-    helpText: "Help page",
-    title: "Halp meh!",
-    name: "Pecimir"
+    helpText: "This is some helpful text.",
+    title: "Help",
+    name: "Petar Kolev"
   });
 });
 
 app.get("/weather", (req, res) => {
-  const address = req.query.address;
-
-  if (!address) {
+  if (!req.query.address) {
     return res.send({
-      errorMessage: "You must provide an address!"
+      error: "You must provide an address!"
     });
   }
 
-  geocode(address, (err, { latitude, longitude, location }) => {
-    if (err) {
-      return res.send({
-        errorMessage: "Something went wrong! Please try again later."
-      });
-    }
-
-    forecast(latitude, longitude, (error, forecastData) => {
-      if (err) {
-        return res.send({
-          errorMessage: "Something went wrong! Please try again later."
-        });
+  geocode(
+    req.query.address,
+    (error, { latitude, longitude, location } = {}) => {
+      if (error) {
+        return res.send({ error });
       }
 
-      res.send({
-        location,
-        forecast: forecastData,
-        address
+      forecast(latitude, longitude, (error, forecastData) => {
+        if (error) {
+          return res.send({ error });
+        }
+
+        res.send({
+          forecast: forecastData,
+          location,
+          address: req.query.address
+        });
       });
-    });
-  });
+    }
+  );
 });
 
 app.get("/products", (req, res) => {
   if (!req.query.search) {
     return res.send({
-      errorMessage: "You must provide a search term!"
+      error: "You must provide a search term"
     });
   }
 
-  console.log("req", req.query.search);
-  res.send({ products: [] });
+  console.log(req.query.search);
+  res.send({
+    products: []
+  });
 });
 
 app.get("/help/*", (req, res) => {
   res.render("404", {
-    title: "Help",
-    name: "Peci Kolec",
-    errorMessage: "Help article not found!"
+    title: "404",
+    name: "Petar Kolev",
+    errorMessage: "Help article not found."
   });
 });
 
 app.get("*", (req, res) => {
   res.render("404", {
-    title: "Error 404",
-    name: "Peci Kolec",
-    errorMessage: "Page Not Found!"
+    title: "404",
+    name: "Petar Kolev",
+    errorMessage: "Page not found."
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is up on port ${PORT}`);
+app.listen(3000, () => {
+  console.log("Server is up on port 3000.");
 });
